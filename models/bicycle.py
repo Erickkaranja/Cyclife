@@ -12,6 +12,7 @@ from sqlalchemy import Float
 class Bicycle(BaseModel, Base):
     """Bicycle class.
        Attributes:
+           __tablename__: sql table.
            model(sqlalchemy string): model description of a bicycle.
            brand(sqlalchemy string): brand description of a bicycle.
            price(sqlalchemy int): unit price of a bicycle.
