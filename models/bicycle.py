@@ -25,4 +25,4 @@ class Bicycle(BaseModel, Base):
     brand = Column(String(60), nullable=False)
     price = Column(Float, nullable=False)
     description = Column(String(60), nullable=False)
-    image = Column(String(60), nullable=False)
+    image = Column(Float, nullable=False)
