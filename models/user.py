@@ -22,11 +22,11 @@ class User(BaseModel, Base):
            reviews(sqlalchemy relationship): user's review.
     """
 
-    __tablename__ = "users"
+    __tablename__ = "user"
     email = Column(String(128), nullable=False)
     password = Column(String(128), nullable=False)
     first_name = Column(String(128))
     last_name = Column(String(128))
-    carts = relationship('cart', backref="user", cascade="delete")
-    orders = relationship('order', backref="user", cascade="delete")
-    reviews = relationship('review', backref="user", cascade="delete")
+    carts = relationship('Cart', backref="user", cascade="delete")
+    orders = relationship('Order', backref="user", cascade="delete")
+    reviews = relationship('Review', backref="user", cascade="delete")

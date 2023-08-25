@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 """creates a mysql database engine."""
+import os
+from models.base_model import Base
 from models.bicycle import Bicycle
 from models.cart import Cart
 from models.order import Order

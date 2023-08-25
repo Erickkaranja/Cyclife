@@ -2,7 +2,8 @@
 """instantiates cart class module."""
 
 from models.base_model import BaseModel
-from models.base_model import BaseModel
+from models.base_model import Base
+from models.user import User
 from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy import String

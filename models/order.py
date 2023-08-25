@@ -22,5 +22,5 @@ class Order(BaseModel, Base):
     __tablename__ = "order"
     order_status = Column(String(60), nullable=False)
     total_price = Column(Float, default=0, nullable=False)
-    user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
+    user_id = Column(String(60), ForeignKey("user.id"), nullable=False)
     bicycle_id = Column(String(60), ForeignKey("bicycle.id"), nullable=False)
