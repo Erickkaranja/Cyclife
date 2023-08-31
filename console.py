@@ -6,6 +6,7 @@ import sys
 
 import cmd2
 
+from models import storage
 from models.bicycle import Bicycle
 from models.user import User
 
@@ -34,6 +35,16 @@ create_bicycle_parser.add_argument(
     "-d", "--description", help="bicycle description"
 )
 create_bicycle_parser.add_argument("-i", "--image", help="bicycle image url")
+
+show_parser = base_subparsers.add_parser("show", help="show objects")
+show_subparsers = show_parser.add_subparsers(
+    title="subcommands", help="subcommand help"
+)
+show_all_parser = show_subparsers.add_parser("all", help="show all objects")
+show_users_parser = show_subparsers.add_parser("users", help="show users")
+show_bicycles_parser = show_subparsers.add_parser(
+    "bicycles", help="show bicycles"
+)
 
 
 class CyclifeCommand(cmd2.Cmd):
@@ -95,8 +106,46 @@ class CyclifeCommand(cmd2.Cmd):
 
     create_bicycle_parser.set_defaults(func=create_bicycle)
 
+    def show_all(self, args):
+        """
+        Show all objects in database
+        """
+        all_objects = storage.all()
+        print([obj.to_dict() for _, obj in all_objects.items()])
+
+    show_all_parser.set_defaults(func=show_all)
+
+    def show_users(self, args):
+        """
+        Show user instances
+        """
+        users = storage.all(cls=User)
+        print([obj.to_dict() for _, obj in users.items()])
+
+    show_users_parser.set_defaults(func=show_users)
+
+    def show_bicycles(self, args):
+        """
+        Show bicycle instances
+        """
+        bicycles = storage.all(cls=Bicycle)
+        print([obj.to_dict() for _, obj in bicycles.items()])
+
+    show_bicycles_parser.set_defaults(func=show_bicycles)
+
     @cmd2.with_argparser(create_parser)
     def do_create(self, args):
+        """
+        Add command help
+        """
+        func = getattr(args, "func", None)
+        if func is not None:
+            func(self, args)
+        else:
+            self.do_help("base")
+
+    @cmd2.with_argparser(show_parser)
+    def do_show(self, args):
         """
         Add command help
         """
