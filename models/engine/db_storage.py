@@ -33,6 +33,7 @@ class DBStorage:
                 os.getenv("HBNB_MYSQL_DB"),
             ),
             pool_pre_ping=True,
+            echo=True,  # debug purposes
         )
 
     def all(self, cls=None):
@@ -61,7 +62,7 @@ class DBStorage:
         """saves objects in the current session."""
         try:
             self.__session.commit()
-        except Exception:
+        except Exception as e:
             self.__session.rollback()
 
     def reload(self):
