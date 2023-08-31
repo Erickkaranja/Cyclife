@@ -59,7 +59,10 @@ class DBStorage:
 
     def save(self):
         """saves objects in the current session."""
-        self.__session.commit()
+        try:
+            self.__session.commit()
+        except Exception:
+            self.__session.rollback()
 
     def reload(self):
         """create's all tables in the database and initializes a
@@ -76,3 +79,7 @@ class DBStorage:
         """deletes an object from the current database session."""
         if obj is not None:
             self.__session.delete(obj)
+
+    def close(self):
+        """call remove() method on the private session attribute"""
+        self.__session.remove()
