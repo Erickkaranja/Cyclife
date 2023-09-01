@@ -8,9 +8,9 @@ import cmd2
 
 from models import storage
 from models.bicycle import Bicycle
-from models.user import User
 from models.cart import Cart
 from models.order import Orders
+from models.user import User
 
 base_parser = cmd2.Cmd2ArgumentParser(
     description="Cyclife CLI",
@@ -44,7 +44,8 @@ create_cart_parser.add_argument("-b", "--bicycle_id", help="Bicycle id")
 create_cart_parser.add_argument("-q", "--quantity", help="Bicycle quantity")
 
 create_order_parser = create_subparsers.add_parser(
-    "order", help="Create order")
+    "order", help="Create order"
+)
 create_order_parser.add_argument("-s", "--order_status", help="Order status")
 create_order_parser.add_argument("-p", "--total_price", help="Total proce")
 create_order_parser.add_argument("-u", "--user_id", help="User id")
@@ -99,7 +100,8 @@ class CyclifeCommand(cmd2.Cmd):
             for k, v in dict(args._get_kwargs()).items()
             if k in ["first_name", "last_name", "email", "password"]
         }
-        new_user = User(**new_dict)
+        new_user = User()
+        [setattr(new_user, k, v) for k, v in new_dict.items()]
         print(new_user.id)
         new_user.save()
 
@@ -114,7 +116,8 @@ class CyclifeCommand(cmd2.Cmd):
             for k, v in dict(args._get_kwargs()).items()
             if k in ["model", "brand", "price", "description", "image"]
         }
-        new_bicycle = Bicycle(**new_dict)
+        new_bicycle = Bicycle()
+        [setattr(new_bicycle, k, v) for k, v in new_dict.items()]
         print(new_bicycle.id)
         new_bicycle.save()
 
@@ -129,9 +132,11 @@ class CyclifeCommand(cmd2.Cmd):
             for k, v in dict(args._get_kwargs()).items()
             if k in ["user_id", "bicycle_id", "quantity"]
         }
-        new_cart = Cart(**new_dict)
+        new_cart = Cart()
         print(new_cart.id)
+        [setattr(new_cart, k, v) for k, v in new_dict.items()]
         new_cart.save()
+
     create_cart_parser.set_defaults(func=create_cart)
 
     def create_order(self, args):
@@ -143,9 +148,11 @@ class CyclifeCommand(cmd2.Cmd):
             for k, v in dict(args._get_kwargs()).items()
             if k in ["order_status", "total_price", "user_id", "bicycle_id"]
         }
-        new_order = Orders(**new_dict)
+        new_order = Orders()
+        [setattr(new_order, k, v) for k, v in new_dict.items()]
         print(new_order)
         new_order.save()
+
     create_order_parser.set_defaults(func=create_order)
 
     def show_all(self, args):
