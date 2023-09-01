@@ -9,6 +9,8 @@ import cmd2
 from models import storage
 from models.bicycle import Bicycle
 from models.user import User
+from models.cart import Cart
+from models.order import Orders
 
 base_parser = cmd2.Cmd2ArgumentParser(
     description="Cyclife CLI",
@@ -35,6 +37,18 @@ create_bicycle_parser.add_argument(
     "-d", "--description", help="bicycle description"
 )
 create_bicycle_parser.add_argument("-i", "--image", help="bicycle image url")
+
+create_cart_parser = create_subparsers.add_parser("cart", help="Create cart")
+create_cart_parser.add_argument("-u", "--user_id", help="User id")
+create_cart_parser.add_argument("-b", "--bicycle_id", help="Bicycle id")
+create_cart_parser.add_argument("-q", "--quantity", help="Bicycle quantity")
+
+create_order_parser = create_subparsers.add_parser(
+    "order", help="Create order")
+create_order_parser.add_argument("-s", "--order_status", help="Order status")
+create_order_parser.add_argument("-p", "--total_price", help="Total proce")
+create_order_parser.add_argument("-u", "--user_id", help="User id")
+create_order_parser.add_argument("-b", "--bicycle_id", help="Bicycle id")
 
 show_parser = base_subparsers.add_parser("show", help="show objects")
 show_subparsers = show_parser.add_subparsers(
@@ -105,6 +119,34 @@ class CyclifeCommand(cmd2.Cmd):
         new_bicycle.save()
 
     create_bicycle_parser.set_defaults(func=create_bicycle)
+
+    def create_cart(self, args):
+        """
+        Create new instance of cart object
+        """
+        new_dict = {
+            k: v
+            for k, v in dict(args._get_kwargs()).items()
+            if k in ["user_id", "bicycle_id", "quantity"]
+        }
+        new_cart = Cart(**new_dict)
+        print(new_cart.id)
+        new_cart.save()
+    create_cart_parser.set_defaults(func=create_cart)
+
+    def create_order(self, args):
+        """
+        Create new instance of order object
+        """
+        new_dict = {
+            k: v
+            for k, v in dict(args._get_kwargs()).items()
+            if k in ["order_status", "total_price", "user_id", "bicycle_id"]
+        }
+        new_order = Orders(**new_dict)
+        print(new_order)
+        new_order.save()
+    create_order_parser.set_defaults(func=create_order)
 
     def show_all(self, args):
         """
