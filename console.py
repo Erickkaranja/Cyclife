@@ -10,6 +10,7 @@ from models import storage
 from models.bicycle import Bicycle
 from models.cart import Cart
 from models.order import Orders
+from models.review import Review
 from models.user import User
 
 base_parser = cmd2.Cmd2ArgumentParser(
@@ -150,8 +151,24 @@ class CyclifeCommand(cmd2.Cmd):
         }
         new_order = Orders()
         [setattr(new_order, k, v) for k, v in new_dict.items()]
-        print(new_order)
+        print(new_order.id)
         new_order.save()
+
+    create_order_parser.set_defaults(func=create_order)
+
+    def create_review(self, args):
+        """
+        Create new instance of review object
+        """
+        new_dict = {
+            k: v
+            for k, v in dict(args._get_kwargs()).items()
+            if k in ["user_id", "bicycle_id", "rating", "text"]
+        }
+        new_review = Review()
+        [setattr(new_review, k, v) for k, v in new_dict.items()]
+        print(new_review.id)
+        new_review.save()
 
     create_order_parser.set_defaults(func=create_order)
 
