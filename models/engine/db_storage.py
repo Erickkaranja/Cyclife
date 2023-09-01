@@ -11,7 +11,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import scoped_session
 
-
+classes = {"Bicycle": Bicycle}
 class DBStorage:
     """instanciating class DBStorage.
        Attributes:
@@ -24,10 +24,10 @@ class DBStorage:
     def __init__(self):
         """initializes class DBStorage constructor"""
         self.__engine = create_engine("mysql+mysqldb://{}:{}@{}/{}".
-                                      format(os.getenv("HBNB_MYSQL_USER"),
-                                             os.getenv("HBNB_MYSQL_PWD"),
-                                             os.getenv("HBNB_MYSQL_HOST"),
-                                             os.getenv("HBNB_MYSQL_DB")),
+                                      format(os.getenv("CYCLIFE_MYSQL_USER"),
+                                             os.getenv("CYCLIFE_MYSQL_PWD"),
+                                             os.getenv("CYCLIFE_MYSQL_HOST"),
+                                             os.getenv("CYCLIFE_MYSQL_DB")),
                                       pool_pre_ping=True)
 
     def all(self, cls=None):
@@ -44,8 +44,7 @@ class DBStorage:
             if type(cls) == str:
                 cls = eval(cls)
             objs = self.__session.query(cls)
-        return {"{}.{}".format(type(obj).__name__, obj.id):
-                obj for obj in objs}
+        return {"{}.{}".format(type(o).__name__, o.id): o for o in objs}
 
     def new(self, obj):
         """creates a new object in the current session."""
@@ -69,3 +68,16 @@ class DBStorage:
         """deletes an object from the current database session."""
         if obj is not None:
             self.__session.delete(obj)
+
+    def close(self):
+        '''calls remove() on the private session'''
+        self.__session.close()
+
+    def get(self, cls, id):
+        '''a method that retrieves a class object based on their id.'''
+        for clss in classes:
+            objects = self.__session.query(classes[clss])
+            for obj in objects:
+                if obj.id == id: 
+                    return obj 
+        return None

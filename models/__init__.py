@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-"""a simple abstraction of db_storage."""
-
+'''a simple data storage abstraction.'''
 from models.engine.db_storage import DBStorage
 storage = DBStorage()
-storage = storage.reload()
+storage.reload()
