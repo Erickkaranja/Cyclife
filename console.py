@@ -61,6 +61,17 @@ show_users_parser = show_subparsers.add_parser("users", help="show users")
 show_bicycles_parser = show_subparsers.add_parser(
     "bicycles", help="show bicycles"
 )
+show_user_parser = show_subparsers.add_parser("user", help="show users")
+show_user_parser.add_argument("-u", "--user_id", help="User id")
+show_user_parser.add_argument(
+    "-c", "--show_carts", action="store_true", help="Show user carts"
+)
+show_user_parser.add_argument(
+    "-o", "--show_orders", action="store_true", help="Show user orders"
+)
+show_user_parser.add_argument(
+    "-r", "--show_reviews", action="store_true", help="Show user reviews"
+)
 
 
 class CyclifeCommand(cmd2.Cmd):
@@ -189,6 +200,30 @@ class CyclifeCommand(cmd2.Cmd):
         print([obj.to_dict() for _, obj in users.items()])
 
     show_users_parser.set_defaults(func=show_users)
+
+    def show_user(sefl, args):
+        user = storage.get(cls=User, id=args.user_id)
+        # print(user)
+        if args.show_carts:
+            print([obj.to_dict() for obj in user.carts])
+        elif args.show_orders:
+            print([obj.to_dict() for obj in user.orders])
+        elif args.show_reviews:
+            print([obj.to_dict() for obj in user.reviews])
+        else:
+            user_info = {
+                user.id: {
+                    "first_name": user.first_name,
+                    "last_name": user.last_name,
+                    "email": user.email,
+                    "reviews": [obj.to_dict() for obj in user.reviews],
+                    "orders": [obj.to_dict() for obj in user.orders],
+                    "carts": [obj.to_dict() for obj in user.carts],
+                }
+            }
+            print(user_info)
+
+    show_user_parser.set_defaults(func=show_user)
 
     def show_bicycles(self, args):
         """
