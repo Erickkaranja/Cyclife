@@ -8,7 +8,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from models.base_model import Base
 from models.bicycle import Bicycle
 from models.cart import Cart
-from models.order import Order
+from models.order import Orders
 from models.review import Review
 from models.user import User
 
@@ -43,7 +43,7 @@ class DBStorage:
         if cls is None:
             objs = self.__session.query(Bicycle).all()
             objs.extend(self.__session.query(Cart).all())
-            objs.extend(self.__session.query(Order).all())
+            objs.extend(self.__session.query(Orders).all())
             objs.extend(self.__session.query(Review).all())
             objs.extend(self.__session.query(User).all())
         else:
@@ -63,6 +63,7 @@ class DBStorage:
         try:
             self.__session.commit()
         except Exception as e:
+            print(e)
             self.__session.rollback()
 
     def reload(self):

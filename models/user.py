@@ -27,5 +27,5 @@ class User(BaseModel, Base):
     first_name = Column(String(128))
     last_name = Column(String(128))
     carts = relationship("Cart", backref="user", cascade="delete")
-    orders = relationship("Order", backref="user", cascade="delete")
+    orders = relationship("Orders", backref="user", cascade="delete")
     reviews = relationship("Review", backref="user", cascade="delete")
