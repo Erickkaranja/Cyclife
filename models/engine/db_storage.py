@@ -27,10 +27,10 @@ class DBStorage:
         """initializes class DBStorage constructor"""
         self.__engine = create_engine(
             "mysql+mysqldb://{}:{}@{}/{}".format(
-                os.getenv("HBNB_MYSQL_USER"),
-                os.getenv("HBNB_MYSQL_PWD"),
-                os.getenv("HBNB_MYSQL_HOST"),
-                os.getenv("HBNB_MYSQL_DB"),
+                os.getenv("HBNB_MYSQL_USER", "cyclife_dev"),
+                os.getenv("HBNB_MYSQL_PWD", "cyclifepass"),
+                os.getenv("HBNB_MYSQL_HOST", "db"),
+                os.getenv("HBNB_MYSQL_DB", "cyclife_dev_db"),
             ),
             pool_pre_ping=True,
             echo=True,  # debug purposes
@@ -84,4 +84,4 @@ class DBStorage:
 
     def close(self):
         """call remove() method on the private session attribute"""
-        self.__session.remove()
+        self.__session.close()
