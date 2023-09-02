@@ -78,7 +78,8 @@ update_subparsers = update_parser.add_subparsers(
 )
 update_user_parser = update_subparsers.add_parser("user", help="update user")
 update_user_parser.add_argument(
-    "-u", "--user_id", help="User id", required=True)
+    "-u", "--user_id", help="User id", required=True
+)
 update_user_parser.add_argument("-f", "--first_name", help="user first name")
 update_user_parser.add_argument("-l", "--last_name", help="user last name")
 update_user_parser.add_argument("-e", "--email", help="user email")
@@ -88,12 +89,47 @@ update_bicycle_parser = update_subparsers.add_parser(
     "bicycle", help="update bicycle"
 )
 update_bicycle_parser.add_argument(
-    "-i", "--bicycle_id", help="bicycle id", required=True)
+    "-i", "--bicycle_id", help="bicycle id", required=True
+)
 update_bicycle_parser.add_argument("-m", "--model", help="bicycle model")
 update_bicycle_parser.add_argument("-b", "--brand", help="bicycle brand")
 update_bicycle_parser.add_argument("-p", "--price", help="bicycle price")
 update_bicycle_parser.add_argument(
     "-d", "--description", help="bicycle description"
+)
+delete_parser = base_subparsers.add_parser("delete", help="delete objects")
+delete_subparsers = delete_parser.add_subparsers(
+    title="subcommands", help="subcommand help"
+)
+delete_user_parser = delete_subparsers.add_parser("user", help="delete user")
+delete_user_parser.add_argument(
+    "-u", "--user_id", help="User id", required=True
+)
+
+delete_bicycle_parser = delete_subparsers.add_parser(
+    "bicycle", help="delete bicycle"
+)
+delete_bicycle_parser.add_argument(
+    "-b", "--bicycle_id", help="bicycle id", required=True
+)
+
+delete_cart_parser = delete_subparsers.add_parser("cart", help="delete cart")
+delete_cart_parser.add_argument(
+    "-c", "--cart_id", help="cart id", required=True
+)
+
+delete_order_parser = delete_subparsers.add_parser(
+    "order", help="delete order"
+)
+delete_order_parser.add_argument(
+    "-c", "--order_id", help="order id", required=True
+)
+
+delete_review_parser = delete_subparsers.add_parser(
+    "review", help="delete review"
+)
+delete_review_parser.add_argument(
+    "-c", "--review_id", help="review id", required=True
 )
 
 
@@ -290,6 +326,46 @@ class CyclifeCommand(cmd2.Cmd):
 
     update_bicycle_parser.set_defaults(func=update_bicycle)
 
+    def delete_user(self, args):
+        """Delete user by id"""
+        user = storage.get(User, args.user_id)
+        storage.delete(user)
+        # TODO should prompt user
+
+    delete_user_parser.set_defaults(func=delete_user)
+
+    def delete_bicycle(self, args):
+        """Delete bicycle by id"""
+        bicycle = storage.get(Bicycle, args.bicycle_id)
+        storage.delete(bicycle)
+        # TODO should prompt user
+
+    delete_bicycle_parser.set_defaults(func=delete_bicycle)
+
+    def delete_cart(self, args):
+        """Delete cart by id"""
+        cart = storage.get(Cart, args.cart_id)
+        storage.delete(cart)
+        # TODO should prompt user
+
+    delete_cart_parser.set_defaults(func=delete_cart)
+
+    def delete_order(self, args):
+        """Delete order by id"""
+        order = storage.get(Orders, args.order_id)
+        storage.delete(order)
+        # TODO should prompt user
+
+    delete_order_parser.set_defaults(func=delete_order)
+
+    def delete_review(self, args):
+        """Delete review by id"""
+        review = storage.get(Review, args.review_id)
+        storage.delete(review)
+        # TODO should prompt user
+
+    delete_review_parser.set_defaults(func=delete_review)
+
     @cmd2.with_argparser(create_parser)
     def do_create(self, args):
         """
@@ -314,6 +390,17 @@ class CyclifeCommand(cmd2.Cmd):
 
     @cmd2.with_argparser(update_parser)
     def do_update(self, args):
+        """
+        Add command help
+        """
+        func = getattr(args, "func", None)
+        if func is not None:
+            func(self, args)
+        else:
+            self.do_help("base")
+
+    @cmd2.with_argparser(delete_parser)
+    def do_delete(self, args):
         """
         Add command help
         """
