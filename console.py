@@ -72,6 +72,29 @@ show_user_parser.add_argument(
 show_user_parser.add_argument(
     "-r", "--show_reviews", action="store_true", help="Show user reviews"
 )
+update_parser = base_subparsers.add_parser("update", help="update objects")
+update_subparsers = update_parser.add_subparsers(
+    title="subcommands", help="subcommand help"
+)
+update_user_parser = update_subparsers.add_parser("user", help="update user")
+update_user_parser.add_argument(
+    "-u", "--user_id", help="User id", required=True)
+update_user_parser.add_argument("-f", "--first_name", help="user first name")
+update_user_parser.add_argument("-l", "--last_name", help="user last name")
+update_user_parser.add_argument("-e", "--email", help="user email")
+update_user_parser.add_argument("-p", "--password", help="user password")
+
+update_bicycle_parser = update_subparsers.add_parser(
+    "bicycle", help="update bicycle"
+)
+update_bicycle_parser.add_argument(
+    "-i", "--bicycle_id", help="bicycle id", required=True)
+update_bicycle_parser.add_argument("-m", "--model", help="bicycle model")
+update_bicycle_parser.add_argument("-b", "--brand", help="bicycle brand")
+update_bicycle_parser.add_argument("-p", "--price", help="bicycle price")
+update_bicycle_parser.add_argument(
+    "-d", "--description", help="bicycle description"
+)
 
 
 class CyclifeCommand(cmd2.Cmd):
@@ -234,6 +257,39 @@ class CyclifeCommand(cmd2.Cmd):
 
     show_bicycles_parser.set_defaults(func=show_bicycles)
 
+    def update_user(self, args):
+        """
+        Update existing instance of user object
+        """
+        new_dict = {
+            k: v
+            for k, v in dict(args._get_kwargs()).items()
+            if k in ["first_name", "last_name", "email", "password"]
+            and v is not None
+        }
+        user = storage.get(User, args.user_id)
+        [setattr(user, k, v) for k, v in new_dict.items()]
+        user.save()
+
+    update_user_parser.set_defaults(func=update_user)
+
+    def update_bicycle(self, args):
+        """
+        update new instance of bicycle object
+        """
+        new_dict = {
+            k: v
+            for k, v in dict(args._get_kwargs()).items()
+            if k in ["model", "brand", "price", "description", "image"]
+            if v is not None
+        }
+        bicycle = storage.get(Bicycle, id)
+        [setattr(bicycle, k, v) for k, v in new_dict.items()]
+        print(bicycle.id)
+        bicycle.save()
+
+    update_bicycle_parser.set_defaults(func=update_bicycle)
+
     @cmd2.with_argparser(create_parser)
     def do_create(self, args):
         """
@@ -247,6 +303,17 @@ class CyclifeCommand(cmd2.Cmd):
 
     @cmd2.with_argparser(show_parser)
     def do_show(self, args):
+        """
+        Add command help
+        """
+        func = getattr(args, "func", None)
+        if func is not None:
+            func(self, args)
+        else:
+            self.do_help("base")
+
+    @cmd2.with_argparser(update_parser)
+    def do_update(self, args):
         """
         Add command help
         """
