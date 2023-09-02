@@ -39,7 +39,10 @@ def post_bicycle():
     if req_json.get('image') is None:
         abort(400, 'missing image')
 
-    new_obj = Bicycle(**req_json)
+    new_obj = Bicycle()
+    for k, v in req_json.items():
+        if k in ["model", "brand", "price", "description", "image"]:
+            setattr(new_obj, k, v)
     storage.new(new_obj)
     storage.save()
 
@@ -54,3 +57,20 @@ def delete_bicycle(bicycle_id):
     obj_bicycle.delete()
     storage.save()
     return make_response(jsonify({}), 200)
+
+@app_views.route('/bicycle/<bicycle_id>', methods=['PUT'], strict_slashes=False)
+def update_bicycle(bicycle_id):
+    """http endpoint that update's bicycle object."""
+    obj_bicycle = storage.get(Bicycle, bicycle_id)
+    if obj_bicycle is None:
+        abort(400, 'Not a JSON')
+
+    req_json = request.get_json()
+    if req_json is None:
+        abort(404)
+
+    for k, v in req_json.items():
+        if k not in ["created_at", "updated_at", "id"]:
+            setattr(obj_bicycle, k, v)
+    storage.save()
+    return make_response(jsonify(obj_bicycle.to_dict()), 200)
