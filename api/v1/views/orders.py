@@ -7,6 +7,7 @@ from api.v1.views import app_views
 from models import storage
 from models.bicycle import Bicycle
 from models.user import User
+from models.order import Orders
 
 
 @app_views.route(
@@ -23,7 +24,7 @@ def user_orders(user_id):
 @app_views.route("/order/<order_id>", methods=["GET"], strict_slashes=False)
 def get_order(order_id):
     """http endpoint that gets an order by id."""
-    obj_order = storage.get(Order, order_id)
+    obj_order = storage.get(Orders, order_id)
     if obj_order is None:
         abort(404)
     return jsonify(obj_order.to_dict())
