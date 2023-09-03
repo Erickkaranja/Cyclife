@@ -1,3 +1,5 @@
+from os import getenv
+
 from flask import Flask
 
 from api.v1.views import app_views
@@ -5,8 +7,6 @@ from models import storage
 
 app = Flask(__name__)
 app.register_blueprint(app_views)
-
-print(app.url_map)
 
 
 @app.teardown_appcontext
@@ -16,4 +16,6 @@ def purge_session(req):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, threaded=True)
+    host = getenv("CYCLIFE_HOST", "0.0.0.0")
+    port = getenv("CYCLIFE_PORT", "5000")
+    app.run(host=host, port=port, debug=True, threaded=True)
