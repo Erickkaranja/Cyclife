@@ -27,10 +27,10 @@ class DBStorage:
         """initializes class DBStorage constructor"""
         self.__engine = create_engine(
             "mysql+mysqldb://{}:{}@{}/{}".format(
-                os.getenv("HBNB_MYSQL_USER", "cyclife_dev"),
-                os.getenv("HBNB_MYSQL_PWD", "cyclifepass"),
-                os.getenv("HBNB_MYSQL_HOST", "db"),
-                os.getenv("HBNB_MYSQL_DB", "cyclife_dev_db"),
+                os.getenv("CYCLIFE_MYSQL_USER"),
+                os.getenv("CYCLIFE_MYSQL_PWD"),
+                os.getenv("CYCLIFE_MYSQL_HOST"),
+                os.getenv("CYCLIFE_MYSQL_DB"),
             ),
             pool_pre_ping=True,
             echo=True,  # debug purposes
