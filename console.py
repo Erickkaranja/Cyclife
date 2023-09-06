@@ -52,6 +52,14 @@ create_order_parser.add_argument("-p", "--total_price", help="Total proce")
 create_order_parser.add_argument("-u", "--user_id", help="User id")
 create_order_parser.add_argument("-b", "--bicycle_id", help="Bicycle id")
 
+create_review_parser = create_subparsers.add_parser(
+    "review", help="Create review"
+)
+create_review_parser.add_argument("-u", "--user_id", help="User id")
+create_review_parser.add_argument("-b", "--bicycle_id", help="Bicycle id")
+create_review_parser.add_argument("-r", "--rating", help="Bicycle ratings")
+create_review_parser.add_argument("-t", "--text", help="Rating text")
+
 show_parser = base_subparsers.add_parser("show", help="show objects")
 show_subparsers = show_parser.add_subparsers(
     title="subcommands", help="subcommand help"
@@ -240,7 +248,7 @@ class CyclifeCommand(cmd2.Cmd):
         print(new_review.id)
         new_review.save()
 
-    create_order_parser.set_defaults(func=create_order)
+    create_review_parser.set_defaults(func=create_review)
 
     def show_all(self, args):
         """
@@ -319,7 +327,7 @@ class CyclifeCommand(cmd2.Cmd):
             if k in ["model", "brand", "price", "description", "image"]
             if v is not None
         }
-        bicycle = storage.get(Bicycle, id)
+        bicycle = storage.get(Bicycle, args.bicycle_id)
         [setattr(bicycle, k, v) for k, v in new_dict.items()]
         print(bicycle.id)
         bicycle.save()
