@@ -152,6 +152,6 @@ def test_delete_user(cyclife_app):
 
 def test_delete_bicycle(cyclife_app):
     global bicycle1_id
-    cyclife_app.app_cmd(f"delete  bicycle -u {bicycle1_id}")
-    out = cyclife_app.app_cmd(f"show bicycle -u {bicycle1_id}")
+    cyclife_app.app_cmd(f"delete  bicycle -b {bicycle1_id}")
+    out = cyclife_app.app_cmd(f"show bicycle -b {bicycle1_id}")
     assert bicycle1_id not in str(out.stdout).strip()
