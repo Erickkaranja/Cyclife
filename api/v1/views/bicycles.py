@@ -65,7 +65,7 @@ def delete_bicycle(bicycle_id):
         abort(404)
     obj_bicycle.delete()
     storage.save()
-    return make_response(jsonify({}), 200)
+    return make_response(jsonify({}, 200))
 
 
 @app_views.route(
