@@ -35,6 +35,9 @@ class DBStorage:
             pool_pre_ping=True,
             echo=True,  # debug purposes
         )
+        # Drop database if on test environment
+        if os.getenv("CYCLIFE_ENV", "") == "test":
+            Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """if cls is None returns all database objects else,

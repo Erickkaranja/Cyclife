@@ -54,6 +54,7 @@ function run_tests() {
 		CYCLIFE_MYSQL_PWD=cyclifepass \
 		CYCLIFE_MYSQL_HOST=localhost \
 		CYCLIFE_MYSQL_DB=cyclife_test_db \
+    CYCLIFE_ENV=test \
 		pytest tests
 }
 
