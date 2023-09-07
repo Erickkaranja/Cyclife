@@ -6,8 +6,8 @@ from flask import abort, jsonify, make_response, request
 from api.v1.views import app_views
 from models import storage
 from models.bicycle import Bicycle
-from models.user import User
 from models.order import Orders
+from models.user import User
 
 
 @app_views.route(
@@ -52,7 +52,7 @@ def post_order(user_id):
     if bicycle_id is None:
         abort(404)
 
-    new_order = Order()
+    new_order = Orders()
     for k, v in req_json.items():
         if k not in ["id", "created_at", "updated_at"]:
             setattr(new_order, k, v)
@@ -64,7 +64,7 @@ def post_order(user_id):
 @app_views.route("/order/<order_id>", methods=["PUT"], strict_slashes=False)
 def update_order(order_id):
     """http endpoint that updates an order."""
-    obj_order = storage.get(Order, order_id)
+    obj_order = storage.get(Orders, order_id)
     if obj_order is None:
         abort(404)
 
@@ -83,7 +83,7 @@ def update_order(order_id):
 )
 def delete_order(order_id):
     """http endpoint that delete's order by id."""
-    obj_order = storage.get(Order, order_id)
+    obj_order = storage.get(Orders, order_id)
     if obj_order is None:
         abort(404)
     obj_order.delete()
